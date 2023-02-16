@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import "@lrnwebcomponents/meme-maker/meme-maker.js";
 
 const drew = new URL('../assets/drew.jpg', import.meta.url).href;
 
@@ -9,9 +10,12 @@ export class DrewCard extends LitElement {
         type: String,
         reflect: true
       },
+      fname: { type: String},
       position: {
         type: String,
-      }
+      },
+      top: { type: String},
+      statsLabel: { type: String},
     }
   }
 
@@ -104,24 +108,26 @@ details {
     super();
     this.name = "Drew Doughty";
     this.position = "Defensive Beast";
+    this.statsLabel = "Career Stats";
+    this.top = "Beast";
   }
 
   render() {
     return html`
     <div class="wrapper">
       <div class="container">
-        <img class="image" src="${drew}"/>
+        <meme-maker
+          image-url="${drew}"
+          top-text="${this.top}">
+        </meme-maker>
         <div class="header">
           <h3>${this.name}</h3>
           <h4>${this.position}</h4>
         </div>
         <details class="details">
-          <summary>Career Stats</summary>
+          <summary>${this.statsLabel}</summary>
           <div>
-            <ul>
-              <li>Stanley cup champion over the disgraced New York Rangers of 2014.</li>
-              <li>COMPLETELY OVERPAID TOOTHLESS WONDER</li>
-            </ul>
+            <slot></slot>
           </div>
         </details>
       </div>
