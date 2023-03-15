@@ -23,6 +23,9 @@
 </head>
 
 <body>
+
+  <team-roster></team-roster>
+
   <div class="buttons">
     <button class="duplicate">Duplicate last card</button>
     <button class="modifytitle">Change Name</button>
@@ -37,7 +40,10 @@
       </ul>
     </drew-card>
   </div>
-  <script type="module" src="./src/drew-card.js"></script>
+  <script type="module">
+    import "./src/drew-card.js";
+    import "./src/team-roster.js";
+  </script>
   <script>    
 // toggle the 1ST instance of the stats
 document.querySelector('button[data-toggle-btn]').addEventListener('click', (e) => {
