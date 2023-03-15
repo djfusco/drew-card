@@ -21,15 +21,7 @@ export default {
     /** Enable using HTML as rollup entrypoint */
     html({
       minify: true,
-      transformHtml: [
-        htmlHackyThing =>
-          htmlHackyThing.replace(
-            '<base href="/">',
-            '<base href="/project-two/">'
-          ),
-      ],
-      injectServiceWorker: true,
-      serviceWorkerPath: 'dist/sw.js',
+      injectServiceWorker: false,
     }),
     /** Resolve bare module imports */
     nodeResolve(),

@@ -1,8 +1,5 @@
 import { LitElement, html, css } from 'lit';
 import "@lrnwebcomponents/meme-maker/meme-maker.js";
-
-const drew = new URL('../assets/drew.jpg', import.meta.url).href;
-
 export class DrewCard extends LitElement {
   static get properties() {
     return {
@@ -16,6 +13,7 @@ export class DrewCard extends LitElement {
       },
       top: { type: String},
       statsLabel: { type: String},
+      image: {type: String},
     }
   }
 
@@ -106,6 +104,7 @@ details {
 
   constructor() {
     super();
+    this.image = new URL('../assets/drew.jpg', import.meta.url).href;
     this.name = "Drew Doughty";
     this.position = "Defensive Beast";
     this.statsLabel = "Career Stats";
@@ -117,7 +116,7 @@ details {
     <div class="wrapper">
       <div class="container">
         <meme-maker
-          image-url="${drew}"
+          image-url="${this.image}"
           top-text="${this.top}">
         </meme-maker>
         <div class="header">
