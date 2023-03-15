@@ -2,7 +2,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import html from '@web/rollup-plugin-html';
 import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
-import esbuild from 'rollup-plugin-esbuild';
+import { terser } from 'rollup-plugin-terser';
 import { generateSW } from 'rollup-plugin-workbox';
 import path from 'path';
 
@@ -21,20 +21,42 @@ export default {
     /** Enable using HTML as rollup entrypoint */
     html({
       minify: true,
+      transformHtml: [
+        htmlHackyThing =>
+          htmlHackyThing.replace(
+            '<base href="/">',
+            '<base href="/project-two/">'
+          ),
+      ],
       injectServiceWorker: true,
       serviceWorkerPath: 'dist/sw.js',
     }),
     /** Resolve bare module imports */
     nodeResolve(),
-    /** Minify JS, compile JS to a lower language target */
-    esbuild({
-      minify: true,
-      target: ['chrome64', 'firefox67', 'safari11.1'],
-    }),
+    /** Minify JS */
+    terser(),
     /** Bundle assets references via import.meta.url */
-    importMetaAssets(),
-    /** Minify html and css tagged template literals */
+    importMetaAssets({
+      warnOnError: true,
+    }),
+    /** Compile JS to a lower language target */
     babel({
+      babelHelpers: 'bundled',
+      presets: [
+        [
+          require.resolve('@babel/preset-env'),
+          {
+            targets: [
+              'last 3 Chrome major versions',
+              'last 3 Firefox major versions',
+              'last 3 Edge major versions',
+              'last 3 Safari major versions',
+            ],
+            modules: false,
+            bugfixes: true,
+          },
+        ],
+      ],
       plugins: [
         [
           require.resolve('babel-plugin-template-html-minifier'),
@@ -55,7 +77,6 @@ export default {
     }),
     /** Create and inject a service worker */
     generateSW({
-      globIgnores: ['polyfills/*.js', 'nomodule-*.js'],
       navigateFallback: '/index.html',
       // where to output the generated sw
       swDest: path.join('dist', 'sw.js'),
@@ -65,7 +86,6 @@ export default {
       globPatterns: ['**/*.{html,js,css,webmanifest}'],
       skipWaiting: true,
       clientsClaim: true,
-      runtimeCaching: [{ urlPattern: 'polyfills/*.js', handler: 'CacheFirst' }],
     }),
   ],
 };
