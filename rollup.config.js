@@ -5,6 +5,7 @@ import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
 import { terser } from 'rollup-plugin-terser';
 import { generateSW } from 'rollup-plugin-workbox';
 import path from 'path';
+import copy from 'rollup-plugin-copy';
 
 export default {
   input: 'index.html',
@@ -25,6 +26,14 @@ export default {
     }),
     /** Resolve bare module imports */
     nodeResolve(),
+    copy({
+      targets: [
+        {
+          src: 'node_modules/@lrnwebcomponents/simple-icon/lib/svgs',
+          dest: 'dist',
+        },
+      ],
+    }),
     /** Minify JS */
     terser(),
     /** Bundle assets references via import.meta.url */
